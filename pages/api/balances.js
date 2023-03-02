@@ -35,41 +35,41 @@ export default async function handler(req, res) {
     res.status(200).json({ balances });
 
     // Subscribe to transfer events for each address and update balances in real time
-    const subscribeToEvents = async (addresses, contractAddress) => {
-      const web3ws = new Web3(
-        new Web3.providers.WebsocketProvider(rpcURL.replace(/^https?/, "wss"))
-      );
-      const contractInstance = new web3ws.eth.Contract(
-        contractABI,
-        contractAddress
-      );
+    // const subscribeToEvents = async (addresses, contractAddress) => {
+    //   const web3ws = new Web3(
+    //     new Web3.providers.WebsocketProvider(rpcURL.replace(/^https?/, "wss"))
+    //   );
+    //   const contractInstance = new web3ws.eth.Contract(
+    //     contractABI,
+    //     contractAddress
+    //   );
 
-      addresses.forEach((address) => {
-        contractInstance.events.Transfer(
-          {
-            filter: { _from: address },
-            fromBlock: "latest",
-          },
-          (error, event) => {
-            if (!error) {
-              console.log(`Received transfer event for address ${address}`);
-              updateBalance(address);
-            }
-          }
-        );
-      });
+    //   addresses.forEach((address) => {
+    //     contractInstance.events.Transfer(
+    //       {
+    //         filter: { _from: address },
+    //         fromBlock: "latest",
+    //       },
+    //       (error, event) => {
+    //         if (!error) {
+    //           console.log(`Received transfer event for address ${address}`);
+    //           updateBalance(address);
+    //         }
+    //       }
+    //     );
+    //   });
 
-      const updateBalance = async (address) => {
-        const etherBalance = await web3.eth.getBalance(address);
-        const tokenBalance = await contractInstance.methods
-          .balanceOf(address)
-          .call();
-        const updatedBalance = { address, etherBalance, tokenBalance };
-        res.write(`data: ${JSON.stringify({ balance: updatedBalance })}\n\n`);
-      };
-    };
+    //   const updateBalance = async (address) => {
+    //     const etherBalance = await web3.eth.getBalance(address);
+    //     const tokenBalance = await contractInstance.methods
+    //       .balanceOf(address)
+    //       .call();
+    //     const updatedBalance = { address, etherBalance, tokenBalance };
+    //     res.write(`data: ${JSON.stringify({ balance: updatedBalance })}\n\n`);
+    //   };
+    // };
 
-    subscribeToEvents(addresses, contractAddress);
+    // subscribeToEvents(addresses, contractAddress);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
