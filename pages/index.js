@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import Web3 from "web3";
 import ShowBalance from "@/components/ShowBalance";
+import ShowBalanceRow from "@/components/ShowBalanceRows";
 
 export default function Home() {
   // State variables for the Ethereum addresses, ERC20 contract address, and token balances
@@ -149,7 +150,7 @@ export default function Home() {
           </form>
         </div>
       </div>
-      {balances && <ShowBalance balances={balances} />}
+      {balances && <ShowBalanceRow balances={balances} contractAddress={contractAddress} />}
     </div>
   );
 }
